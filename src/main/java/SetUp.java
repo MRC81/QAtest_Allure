@@ -1,31 +1,24 @@
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.WebDriverRunner;
-import com.codeborne.selenide.junit5.TextReportExtension;
 import com.codeborne.selenide.logevents.SelenideLogger;
+import com.codeborne.selenide.testng.TextReport;
 import io.qameta.allure.selenide.AllureSelenide;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.testng.annotations.*;
 
-import static com.codeborne.selenide.WebDriverRunner.clearBrowserCache;
 import static io.qameta.allure.Allure.step;
-import static java.lang.System.setProperty;
 
 
-@ExtendWith({TextReportExtension.class})
+@Listeners({TextReport.class})
 public class SetUp {
 
-    @BeforeEach
+    @BeforeClass
     public void launchBrowserAndOpenSite() {
         String browser = System.getProperty("selenide.browser", "chrome");
 
         Configuration.browser = browser;
 
-        String host = "https://www.investing.com/equities/gamestop-corp";
-
-        clearBrowserCache();
-        WebDriverRunner.driver().clearCookies();
+        String host = "https://www.investing.com";
 
         Configuration.holdBrowserOpen = false;
         Configuration.startMaximized = true;
@@ -34,8 +27,6 @@ public class SetUp {
         Configuration.headless = false;
         //Configuration.browserSize = "1920x1080";
         Configuration.reportsFolder = "reports";
-
-        setProperty("java.util.logging.SimpleFormatter.format", "%1$tT %4$s %5$s%6$s%n");
 
         SelenideLogger.addListener("AllureSelenide", new AllureSelenide()
                 .screenshots(true)
@@ -47,7 +38,7 @@ public class SetUp {
         );
     }
 
-    @AfterEach
+    @AfterClass
     public void tearDown() {
         SelenideLogger.removeListener("AllureSelenide");
         WebDriverRunner.closeWebDriver();

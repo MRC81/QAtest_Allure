@@ -10,10 +10,10 @@ repositories {
     mavenCentral()
 }
 
-def allureVersion = "2.14.0",
-    selenideVersion = "5.23.2",
-    junitVersion = "5.7.2",
-    cucumberVersion = "6.11.0"
+def allureVersion = '2.15.0',
+    selenideVersion = '5.24.3',
+    testNGVersion = '7.4.0'
+    //junitVersion = '5.8.0'
 
 allure {
     version = allureVersion
@@ -29,22 +29,28 @@ allure {
 }
 
 dependencies {
-    implementation ("org.junit.jupiter:junit-jupiter-api:$junitVersion",
-            "org.junit.jupiter:junit-jupiter-params:$junitVersion",
+    implementation (
+            //"org.junit.jupiter:junit-jupiter-api:$junitVersion",
+            //"org.junit.jupiter:junit-jupiter-params:$junitVersion",
+            "org.testng:testng:$testNGVersion",
             "io.qameta.allure:allure-junit5:$allureVersion",
             "io.qameta.allure:allure-selenide:$allureVersion",
             "com.codeborne:selenide:$selenideVersion",
-            "io.cucumber:cucumber-java:$cucumberVersion",
-            "io.cucumber:cucumber-junit:$cucumberVersion",
             "org.slf4j:slf4j-simple:1.7.32",
             "org.aspectj:aspectjweaver:1.9.7"
     )
 
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.0'
 }
 
 test {
-    useJUnitPlatform()
+    //useJUnitPlatform()
+    useTestNG() {
+        testLogging.showStandardStreams = true
+        useDefaultListeners = true
+        reports.html.enabled(false)
+    }
+
     systemProperties(System.getProperties())
 }
 
